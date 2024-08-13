@@ -11,7 +11,6 @@ let cursorPosition = { x: canvas.width / 2, y: canvas.height / 2 };
 let caughtCounts = { orange: 0, cyan: 0, lime: 0, pink: 0, teal: 0 };
 let totalCaught = 0;
 
-// Update cursor position based on mouse movement
 canvas.addEventListener('mousemove', (e) => {
     cursorPosition.x = e.clientX;
     cursorPosition.y = e.clientY;
@@ -88,7 +87,6 @@ function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     squares.forEach(square => square.update());
 
-    // Draw the cursor
     ctx.beginPath();
     ctx.arc(cursorPosition.x, cursorPosition.y, cursorRadius, 0, Math.PI * 2, false);
     ctx.strokeStyle = 'white';
