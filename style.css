@@ -29,11 +29,6 @@ body {
     transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
 
-#infoBox:hover {
-    transform: scale(1.05);
-    opacity: 1;
-}
-
 #infoBox p {
     margin: 5px 0;
     font-weight: bold;
