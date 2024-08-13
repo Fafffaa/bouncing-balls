@@ -6,20 +6,14 @@ canvas.height = window.innerHeight;
 
 let squares = [];
 let colors = ['orange', 'cyan', 'lime', 'pink', 'teal'];
-let paddle = { width: 150, height: 20, x: canvas.width / 2 - 75, y: canvas.height - 50 };
+let cursor = { radius: 25, x: canvas.width / 2, y: canvas.height / 2 };
 let squareSize = 30;
 let caughtCounts = { orange: 0, cyan: 0, lime: 0, pink: 0, teal: 0 };
 let totalCaught = 0;
-let movePaddle = { left: false, right: false };
 
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft') movePaddle.left = true;
-    if (e.key === 'ArrowRight') movePaddle.right = true;
-});
-
-document.addEventListener('keyup', (e) => {
-    if (e.key === 'ArrowLeft') movePaddle.left = false;
-    if (e.key === 'ArrowRight') movePaddle.right = false;
+canvas.addEventListener('mousemove', (e) => {
+    cursor.x = e.clientX;
+    cursor.y = e.clientY;
 });
 
 class Square {
@@ -51,11 +45,10 @@ class Square {
     }
 
     checkCollision() {
-        if (
-            this.y + this.size > paddle.y &&
-            this.x + this.size > paddle.x &&
-            this.x < paddle.x + paddle.width
-        ) {
+        let distX = Math.abs(this.x + this.size / 2 - cursor.x);
+        let distY = Math.abs(this.y + this.size / 2 - cursor.y);
+
+        if (distX <= cursor.radius + this.size / 2 && distY <= cursor.radius + this.size / 2) {
             caughtCounts[this.color]++;
             totalCaught++;
             updateInfoBox();
@@ -93,17 +86,12 @@ function animate() {
     squares.forEach(square => square.update());
 
     ctx.beginPath();
-    ctx.rect(paddle.x, paddle.y, paddle.width, paddle.height);
-    ctx.fillStyle = 'white';
-    ctx.fill();
+    ctx.arc(cursor.x, cursor.y, cursor.radius, 0, Math.PI * 2, false);
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 3;
+    ctx.stroke();
     ctx.closePath();
 
-    if (movePaddle.left && paddle.x > 0) {
-        paddle.x -= 7;
-    }
-    if (movePaddle.right && paddle.x + paddle.width < canvas.width) {
-        paddle.x += 7;
-    }
     requestAnimationFrame(animate);
 }
 
