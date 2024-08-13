@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catch the Falling Squares Using Cursor</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Bouncing Balls with Catching Cursor</title>
     <style>
         body {
             margin: 0;
@@ -12,18 +11,14 @@
             overflow: hidden;
             background: url('skybg.jpg') no-repeat center center fixed;
             background-size: cover;
-            font-family: 'Arial', sans-serif;
         }
-
         #canvas {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1; 
         }
-
         #infoBox {
             position: absolute;
             top: 10px;
@@ -31,49 +26,25 @@
             width: 250px;
             background-color: rgba(255, 255, 255, 0.8);
             padding: 10px;
-            border-radius: 12px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
-            font-family: 'Arial', sans-serif;
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            font-family: Arial, sans-serif;
         }
-
         #infoBox p {
             margin: 5px 0;
             font-weight: bold;
-            color: #444;
-        }
-
-        h1 {
-            text-align: center;
-            color: white;
-            margin-top: 20px;
-            font-family: 'Arial', sans-serif;
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
-            font-size: 3em;
-            animation: fadeIn 2s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
         }
     </style>
 </head>
 <body>
-    <h1>Catch the Falling Squares using Cursor</h1>
     <canvas id="canvas"></canvas>
     <div id="infoBox">
-        <p>Total Squares Caught: <span id="totalCaught">0</span></p>
-        <p>Orange Squares Caught: <span id="orangeCaught">0</span></p>
-        <p>Cyan Squares Caught: <span id="cyanCaught">0</span></p>
-        <p>Lime Squares Caught: <span id="limeCaught">0</span></p>
-        <p>Pink Squares Caught: <span id="pinkCaught">0</span></p>
-        <p>Teal Squares Caught: <span id="tealCaught">0</span></p>
+        <p>Total Balls Caught: <span id="totalCaught">0</span></p>
+        <p>Orange Balls Caught: <span id="orangeCaught">0</span></p>
+        <p>Cyan Balls Caught: <span id="cyanCaught">0</span></p>
+        <p>Lime Balls Caught: <span id="limeCaught">0</span></p>
+        <p>Pink Balls Caught: <span id="pinkCaught">0</span></p>
+        <p>Teal Balls Caught: <span id="tealCaught">0</span></p>
     </div>
     <script src="main.js"></script>
 </body>
