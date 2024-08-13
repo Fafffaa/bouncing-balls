@@ -4,40 +4,50 @@ const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-let squares = [];
+let balls = [];
 let colors = ['orange', 'cyan', 'lime', 'pink', 'teal'];
-let cursorRadius = 40;
-let cursorPosition = { x: canvas.width / 2, y: canvas.height / 2 };
+let cursorRadius = 30;
 let caughtCounts = { orange: 0, cyan: 0, lime: 0, pink: 0, teal: 0 };
 let totalCaught = 0;
 
-canvas.addEventListener('mousemove', (e) => {
-    cursorPosition.x = e.clientX;
-    cursorPosition.y = e.clientY;
+document.addEventListener('mousemove', (e) => {
+    cursor.x = e.clientX;
+    cursor.y = e.clientY;
 });
 
-class Square {
-    constructor(x, y, size, color) {
+let cursor = {
+    x: canvas.width / 2,
+    y: canvas.height / 2,
+    radius: cursorRadius,
+};
+
+class Ball {
+    constructor(x, y, radius, color) {
         this.x = x;
         this.y = y;
-        this.size = size;
+        this.radius = radius;
         this.color = color;
-        this.dy = Math.random() * 3 + 2;
+        this.dx = Math.random() * 4 - 2;
+        this.dy = Math.random() * 4 - 2;
     }
 
     draw() {
         ctx.beginPath();
-        ctx.rect(this.x, this.y, this.size, this.size);
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         ctx.fillStyle = this.color;
         ctx.fill();
         ctx.closePath();
     }
 
     update() {
+        this.x += this.dx;
         this.y += this.dy;
 
-        if (this.y > canvas.height) {
-            this.respawn();
+        if (this.x + this.radius > canvas.width || this.x - this.radius < 0) {
+            this.dx = -this.dx;
+        }
+        if (this.y + this.radius > canvas.height || this.y - this.radius < 0) {
+            this.dy = -this.dy;
         }
 
         this.checkCollision();
@@ -45,11 +55,11 @@ class Square {
     }
 
     checkCollision() {
-        let distX = this.x + this.size / 2 - cursorPosition.x;
-        let distY = this.y + this.size / 2 - cursorPosition.y;
+        let distX = this.x - cursor.x;
+        let distY = this.y - cursor.y;
         let distance = Math.sqrt(distX * distX + distY * distY);
 
-        if (distance < cursorRadius + this.size / 2) {
+        if (distance < this.radius + cursor.radius) {
             caughtCounts[this.color]++;
             totalCaught++;
             updateInfoBox();
@@ -58,9 +68,10 @@ class Square {
     }
 
     respawn() {
-        this.x = Math.random() * (canvas.width - this.size);
-        this.y = -this.size;
-        this.dy = Math.random() * 3 + 2;
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.dx = Math.random() * 4 - 2;
+        this.dy = Math.random() * 4 - 2;
     }
 }
 
@@ -75,23 +86,21 @@ function updateInfoBox() {
 
 function init() {
     for (let i = 0; i < 15; i++) {
-        let size = 30;
-        let x = Math.random() * (canvas.width - size);
-        let y = Math.random() * canvas.height - size;
+        let x = Math.random() * canvas.width;
+        let y = Math.random() * canvas.height;
         let color = colors[Math.floor(Math.random() * colors.length)];
-        squares.push(new Square(x, y, size, color));
+        balls.push(new Ball(x, y, 20, color));
     }
 }
 
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    squares.forEach(square => square.update());
+    balls.forEach(ball => ball.update());
 
     ctx.beginPath();
-    ctx.arc(cursorPosition.x, cursorPosition.y, cursorRadius, 0, Math.PI * 2, false);
-    ctx.strokeStyle = 'white';
-    ctx.lineWidth = 5;
-    ctx.stroke();
+    ctx.arc(cursor.x, cursor.y, cursor.radius, 0, Math.PI * 2);
+    ctx.fillStyle = 'white';
+    ctx.fill();
     ctx.closePath();
 
     requestAnimationFrame(animate);
