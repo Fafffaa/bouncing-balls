@@ -104,7 +104,6 @@ function animate() {
     if (movePaddle.right && paddle.x + paddle.width < canvas.width) {
         paddle.x += 7;
     }
-
     requestAnimationFrame(animate);
 }
 
