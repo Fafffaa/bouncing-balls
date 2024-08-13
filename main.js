@@ -6,14 +6,15 @@ canvas.height = window.innerHeight;
 
 let squares = [];
 let colors = ['orange', 'cyan', 'lime', 'pink', 'teal'];
-let cursor = { radius: 25, x: canvas.width / 2, y: canvas.height / 2 };
-let squareSize = 30;
+let cursorRadius = 40;
+let cursorPosition = { x: canvas.width / 2, y: canvas.height / 2 };
 let caughtCounts = { orange: 0, cyan: 0, lime: 0, pink: 0, teal: 0 };
 let totalCaught = 0;
 
+// Update cursor position based on mouse movement
 canvas.addEventListener('mousemove', (e) => {
-    cursor.x = e.clientX;
-    cursor.y = e.clientY;
+    cursorPosition.x = e.clientX;
+    cursorPosition.y = e.clientY;
 });
 
 class Square {
@@ -36,7 +37,7 @@ class Square {
     update() {
         this.y += this.dy;
 
-        if (this.y + this.size > canvas.height) {
+        if (this.y > canvas.height) {
             this.respawn();
         }
 
@@ -45,10 +46,11 @@ class Square {
     }
 
     checkCollision() {
-        let distX = Math.abs(this.x + this.size / 2 - cursor.x);
-        let distY = Math.abs(this.y + this.size / 2 - cursor.y);
+        let distX = this.x + this.size / 2 - cursorPosition.x;
+        let distY = this.y + this.size / 2 - cursorPosition.y;
+        let distance = Math.sqrt(distX * distX + distY * distY);
 
-        if (distX <= cursor.radius + this.size / 2 && distY <= cursor.radius + this.size / 2) {
+        if (distance < cursorRadius + this.size / 2) {
             caughtCounts[this.color]++;
             totalCaught++;
             updateInfoBox();
@@ -74,10 +76,11 @@ function updateInfoBox() {
 
 function init() {
     for (let i = 0; i < 15; i++) {
-        let x = Math.random() * (canvas.width - squareSize);
-        let y = Math.random() * canvas.height - squareSize;
+        let size = 30;
+        let x = Math.random() * (canvas.width - size);
+        let y = Math.random() * canvas.height - size;
         let color = colors[Math.floor(Math.random() * colors.length)];
-        squares.push(new Square(x, y, squareSize, color));
+        squares.push(new Square(x, y, size, color));
     }
 }
 
@@ -85,10 +88,11 @@ function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     squares.forEach(square => square.update());
 
+    // Draw the cursor
     ctx.beginPath();
-    ctx.arc(cursor.x, cursor.y, cursor.radius, 0, Math.PI * 2, false);
+    ctx.arc(cursorPosition.x, cursorPosition.y, cursorRadius, 0, Math.PI * 2, false);
     ctx.strokeStyle = 'white';
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 5;
     ctx.stroke();
     ctx.closePath();
 
